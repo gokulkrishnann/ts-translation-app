@@ -1,25 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import { useTranslation } from "react-i18next";
+import i18n from "./i18n";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./App.css";
 
 function App() {
+  const { t } = useTranslation();
+
+  const switchLanguage = (language: string) => {
+    i18n.changeLanguage(language);
+    window.history.replaceState(
+      {},
+      "",
+      window.location.pathname + `?language=` + language
+    );
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Router>
+      <div className="App">
+        <nav
+          style={{ width: "100%", padding: "2rem 0", backgroundColor: "gray" }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <select
+            value={i18n.language}
+            onChange={(e) => switchLanguage(e.target.value)}
+          >
+            {[
+              ["English", "en"],
+              ["Hindi", "hi"],
+              ["Telugu", "te"],
+            ].map(([value, label]) => (
+              <option key={label} value={label}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </nav>
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <div>
+            <h3>{t("hi")}</h3>
+            <h3>{t("message")}</h3>
+          </div>
+        </header>
+      </div>
+    </Router>
   );
 }
 
